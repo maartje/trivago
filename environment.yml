@@ -1,0 +1,7 @@
+name: trivago-env
+dependencies:
+- python=3
+- numpy
+- pandas
+- jupyter 
+- scikit-learn
