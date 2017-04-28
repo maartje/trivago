@@ -9,13 +9,17 @@ Usage:
 
 import sys
 from load import load_json
+from process import get_weights, get_intensifiers, get_reviews, get_hotel
 
 
 def main(reviews = "data/reviews3.json", semantics = "semantics/semantics.json"):
-    review_data = load_json(reviews) #TODO: support passing dir with review files
     semantics_data = load_json(semantics)
-    print(review_data.keys())
-    print(semantics_data.keys())
+    df_weights = get_weights(semantics_data)
+    df_intensifiers = get_intensifiers(semantics_data)
+
+    review_data = load_json(reviews) #TODO: support passing dir with review files
+    df_reviews = get_reviews(review_data)
+    hotel = get_hotel(review_data)
 
 if __name__ == "__main__":
     if len(sys.argv) == 3:
