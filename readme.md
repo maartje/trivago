@@ -4,6 +4,10 @@
 
 - conda env create -f environment.yml
 
-- activate trivago-env
+- source activate trivago-env (windows: activate trivago-env)
+
+- python src/main.py
+
+- python -m unittest discover test
 
 - jupyter notebook
