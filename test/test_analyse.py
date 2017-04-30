@@ -26,6 +26,8 @@ class TestStringMethods(unittest.TestCase):
         actual_score = score_sentiment(text, {"old" : -1, 'hard' : -1})
         expected_score = 0
         self.assertEqual(actual_score, expected_score)
+        
+    #TODO: add unit tests for topics
 
 if __name__ == '__main__':
     unittest.main()

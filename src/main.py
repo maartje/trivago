@@ -14,7 +14,7 @@ from process import get_weights, get_intensifiers, get_reviews, get_hotel
 from analyse import score_sentiment
 
 
-def main(reviews, topic=None, semantics = "semantics/semantics.json"):  
+def main(reviews, topic_words=None, semantics = "semantics/semantics.json"):  
     semantics_data = load_json(semantics)
     weights = get_weights(semantics_data)
     df_intensifiers = get_intensifiers(semantics_data)
@@ -22,8 +22,9 @@ def main(reviews, topic=None, semantics = "semantics/semantics.json"):
     review_data = load_json(reviews) #TODO: support passing dir with review files
     df_reviews = get_reviews(review_data)
     hotel = get_hotel(review_data)
-    mj = score_sentiment("Horrible. I didn't sleep. Personel was friendly though. cold. I am not going to come back!", weights)
-    print (mj)
+    ds = df_reviews['Content'].apply(lambda t: score_sentiment(t, weights, topic_words))
+    ds.sort_values(inplace=True)
+    print(ds.values)    
     
 
 if __name__ == "__main__": #TODO: topic can be a list with synonyms. 
@@ -34,6 +35,6 @@ if __name__ == "__main__": #TODO: topic can be a list with synonyms.
     if len(sys.argv) == 2:
         main(sys.argv[1])
     if len(sys.argv) == 1:
-        main("data/reviews3.json", "room") #TODO make path to reviews required? 
+        main("data/reviews2.json", ["room"]) #TODO make path to reviews required? 
     else:
         raise ValueError('Wrong number of arguments. Arguments are: path to reviews directory (optional) and path to semantics file (optional)')
