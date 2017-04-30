@@ -6,7 +6,8 @@ def get_weights(semantics_data):
     df_negative = json_normalize(semantics_data['negative'])
     df_negative['value'] = df_negative['value'].apply(lambda v: -1*v)
     df_weights = pd.concat([df_negative, df_positive])
-    return df_weights
+    weights = dict(zip(df_weights['phrase'], df_weights['value']))
+    return weights
 
 def get_intensifiers(semantics_data):
     df_intensifier = json_normalize(semantics_data['intensifier'])

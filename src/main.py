@@ -11,16 +11,19 @@ Usage:
 import sys
 from load import load_json
 from process import get_weights, get_intensifiers, get_reviews, get_hotel
+from analyse import score_sentiment
 
 
 def main(reviews, topic=None, semantics = "semantics/semantics.json"):  
     semantics_data = load_json(semantics)
-    df_weights = get_weights(semantics_data)
+    weights = get_weights(semantics_data)
     df_intensifiers = get_intensifiers(semantics_data)
 
     review_data = load_json(reviews) #TODO: support passing dir with review files
     df_reviews = get_reviews(review_data)
     hotel = get_hotel(review_data)
+    mj = score_sentiment("Horrible. I didn't sleep. Personel was friendly though. cold. I am not going to come back!", weights)
+    print (mj)
     
 
 if __name__ == "__main__": #TODO: topic can be a list with synonyms. 
