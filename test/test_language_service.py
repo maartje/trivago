@@ -1,7 +1,7 @@
 from src.language_service import get_singular_or_plural, get_synonyms
 import unittest
 
-class TestStringMethods(unittest.TestCase):
+class TestLanguageService(unittest.TestCase):
 
     def test_get_singular_or_plural_returns_plural_by_adding_s(self):
         word = "room"
