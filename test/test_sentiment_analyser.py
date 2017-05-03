@@ -23,14 +23,14 @@ class TestSentimentAnalyser(unittest.TestCase):
         self._sentiment_analyser = SentimentAnalyzer(self._sentiment_scorer)
         self._sentiment_analyser.initialize(sentiment_weights, multiplier_weights)
 
-    def test_score_sentiment_adds_scores_for_matched_phrases(self):
+    def test_score_sentiment_matches_phrases(self):
         text = "The location was great, but the bed uncomfortable"
         self._sentiment_analyser.score_sentiment(text)
         self._sentiment_scorer.score_sentiment.assert_called_with([
             ([], "great"),
             ([], "uncomfortable")])
 
-    def test_score_sentiment_adds_scores_for_matched_phrases_with_multiple_words(self):
+    def test_score_sentiment_matches_phrases_with_multiple_words(self):
         text = "It didn't work for us."
         self._sentiment_analyser.score_sentiment(text)
         self._sentiment_scorer.score_sentiment.assert_called_with([
@@ -49,30 +49,30 @@ class TestSentimentAnalyser(unittest.TestCase):
         self._sentiment_analyser.score_sentiment(text)
         self._sentiment_scorer.score_sentiment.assert_called_with([])
 
-    def test_score_sentiment_multiplies_phrase_score_by_preceding_multiplier_scores(self):
+    def test_score_sentiment_matches_multipliers_preceding_phrases(self):
         text = "The location was NOT really great, but it was not bad either"
         self._sentiment_analyser.score_sentiment(text)
         self._sentiment_scorer.score_sentiment.assert_called_with([
             (["not", "really"], "great"),
             (["not"], "bad")])
 
-    def test_score_sentiment_multiplies_phrase_score_correctly_when_term_multiple_times(self):
+    def test_score_sentiment_matches_multipliers_correctly_when_phrase_occurs_multiple_times(self):
         text = "The location was great, actually it was really great!"
         self._sentiment_analyser.score_sentiment(text)
         self._sentiment_scorer.score_sentiment.assert_called_with([
             ([], "great"),
             (["really"], "great")])
 
-    def test_score_sentiment_when_no_multipliers_then_find_no_multipliers(self):
+    def test_score_sentiment_when_no_multiplier_weights_then_matches_no_multipliers(self):
         text = "The location was really great!"
         self._sentiment_analyser.initialize({"great" : 2})
         self._sentiment_analyser.score_sentiment(text)
         self._sentiment_scorer.score_sentiment.assert_called_with([
             ([], "great")])
 
-    def test_score_sentiment_when_no_sentiment_weights_then_find_no_blocks(self):
+    def test_score_sentiment_when_no_sentiment_weights_then_matches_no_phrases_and_no_multipliers(self):
         text = "The location was really great!"
-        self._sentiment_analyser.initialize({})
+        self._sentiment_analyser.initialize({}, {"not" : -1})
         self._sentiment_analyser.score_sentiment(text)
         self._sentiment_scorer.score_sentiment.assert_called_with([])
 
