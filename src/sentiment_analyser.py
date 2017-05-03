@@ -1,20 +1,23 @@
 import re
-import operator
-import functools
 
 class SentimentAnalyzer:
-    """ Calculates a sentiment score from sentiment phrases and multipliers"""
+    """ Calculates a sentiment score by identifying semantic phrases and multipliers"""
 
-    def __init__(self, sentiment_weights, multiplier_weights = {}):
+    def __init__(self, scorer):
         """Initializes SentimentAnalyzer."""
-        self._sentiment_weights = sentiment_weights
-        self._multiplier_weights = multiplier_weights
-        self._sentiment_regex = self._get_sentiment_regex()
-        self._multiplier_pattern = self._get_multiplier_pattern()    
+        self._scorer = scorer
+        self._sentiment_regex = None
+        self._multiplier_pattern = None    
+        
+    def initialize(self, sentiment_weights={}, multiplier_weights = {}):
+        self._scorer.initialize(sentiment_weights, multiplier_weights)
+        self._sentiment_regex = self._get_sentiment_regex(sentiment_weights.keys())
+        self._multiplier_pattern = self._get_multiplier_pattern(multiplier_weights.keys())    
 
     def score_sentiment(self, text):
         """ Calculates a sentiment score from sentiment phrases and multipliers """
-        return sum ([self._score_sentiment_block(b) for b in self._find_sentiment_blocks(text)])
+        sentiment_blocks = self._find_sentiment_blocks(text)
+        return self._scorer.score_sentiment(sentiment_blocks)
 
     def _find_sentiment_blocks(self, text):
         sentiment_matches = self._sentiment_regex.finditer(text)
@@ -38,22 +41,19 @@ class SentimentAnalyzer:
             return []
         return self._find_multipliers(phrase_prefix_fragment, match.start()) + [match.group().lower()]
 
-    def _score_sentiment_block(self, block):
-        (multipliers, phrase) = block
-        phrase_weight = (self._sentiment_weights.get(phrase, 0))
-        mult_weights = ([self._multiplier_weights.get(m, 1) for m in multipliers])
-        block_score = functools.reduce(operator.mul, mult_weights + [phrase_weight], 1)
-        print (block, block_score)
-        return block_score
-
-    def _get_sentiment_regex(self):
-        word_start_pattern = r"(?<![a-zA-Z])"
-        word_end_pattern = r"(?![a-zA-Z])"
-        pattern = word_start_pattern + "("+ "|".join(self._sentiment_weights.keys()) + ")" + word_end_pattern
-        return re.compile(pattern, re.IGNORECASE)
-
-    def _get_multiplier_pattern(self):
-        if not self._multiplier_weights.keys():
+    def _get_sentiment_regex(self, sentiment_phrases):
+        if not sentiment_phrases:
             never_match_pattern = "a^"
             return never_match_pattern 
-        return "(" + "|".join(self._multiplier_weights.keys()) + ")"
+        word_start_pattern = r"(?<![a-zA-Z])"
+        word_end_pattern = r"(?![a-zA-Z])"
+        pattern = word_start_pattern + "("+ "|".join(sentiment_phrases) + ")" + word_end_pattern
+        return re.compile(pattern, re.IGNORECASE)
+
+    def _get_multiplier_pattern(self, multipliers):
+        if not multipliers:
+            never_match_pattern = "a^"
+            return never_match_pattern 
+        return "(" + "|".join(multipliers) + ")"
+
+

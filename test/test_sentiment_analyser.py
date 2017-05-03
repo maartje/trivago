@@ -1,4 +1,6 @@
 from src.sentiment_analyser import SentimentAnalyzer
+from src.sentiment_scorer import SentimentScorer
+
 import unittest
 
 class TestStringMethods(unittest.TestCase):
@@ -16,7 +18,9 @@ class TestStringMethods(unittest.TestCase):
             "not" : -1,
             "really" : 1.5
         }
-        self._sentiment_analyser = SentimentAnalyzer(sentiment_weights, multiplier_weights)
+        sentiment_scorer = SentimentScorer()
+        self._sentiment_analyser = SentimentAnalyzer(sentiment_scorer)
+        self._sentiment_analyser.initialize(sentiment_weights, multiplier_weights)
 
     def test_score_sentiment_adds_scores_for_matched_phrases(self):
         text = "The location was great, but the bed uncomfortable"
