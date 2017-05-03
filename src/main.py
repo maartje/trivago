@@ -31,8 +31,8 @@ def main(reviews, topic=None, semantics = "semantics/semantics.json"):
     print(ds.values[0], ds.values[-1])    
     
 def get_topic_words(word):
-    result = [word]
-    result.extend(get_synonyms(word))
+    result = [word.lower()]
+    result.extend(get_synonyms(word.lower()))
     result.extend([get_singular_or_plural(w) for w in result])
     return [w for w in result if w]
 
