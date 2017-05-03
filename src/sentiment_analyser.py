@@ -1,21 +1,23 @@
 import re
 
 class SentimentAnalyzer:
-    """ Calculates a sentiment score by identifying semantic phrases and multipliers"""
+    """ Calculates a sentiment score for a text fragment 
+    by identifying semantic phrases and multipliers """
 
     def __init__(self, scorer):
-        """Initializes SentimentAnalyzer."""
         self._scorer = scorer
         self._sentiment_regex = None
         self._multiplier_pattern = None    
         
     def initialize(self, sentiment_weights, multiplier_weights = {}):
+        """ Initializes SentimentAnalyzer """
         self._scorer.initialize(sentiment_weights, multiplier_weights)
         self._sentiment_regex = self._get_sentiment_regex(sentiment_weights.keys())
         self._multiplier_pattern = self._get_multiplier_pattern(multiplier_weights.keys())    
 
     def score_sentiment(self, text):
-        """ Calculates a sentiment score from sentiment phrases and multipliers """
+        """ Calculates a sentiment score from sentiment phrases and 
+        their associated multipliers found in the given text """
         sentiment_blocks = self._find_sentiment_blocks(text)
         return self._scorer.score_sentiment(list(sentiment_blocks))
 
@@ -29,17 +31,18 @@ class SentimentAnalyzer:
             yield self._build_sentiment_block(phrase_prefix_fragment, phrase_start)
     
     def _build_sentiment_block(self, phrase_prefix_fragment, phrase_start):
-            multipliers = self._find_multipliers(phrase_prefix_fragment, phrase_start)            
+            multipliers = self._find_preceding_multipliers(phrase_prefix_fragment, phrase_start)            
             phrase = phrase_prefix_fragment[phrase_start :].lower()            
             return (multipliers, phrase)
 
-    def _find_multipliers(self, phrase_prefix_fragment, phrase_start):
+    def _find_preceding_multipliers(self, phrase_prefix_fragment, phrase_start):
         phrase = phrase_prefix_fragment[phrase_start : ]
         pattern = self._multiplier_pattern + "(?=\s+" + phrase + ")"
         match = re.search(pattern, phrase_prefix_fragment, re.IGNORECASE)
         if not match:
             return []
-        return self._find_multipliers(phrase_prefix_fragment, match.start()) + [match.group().lower()]
+        return self._find_preceding_multipliers(phrase_prefix_fragment, match.start()) + [match.group().lower()]
+
 
     def _get_sentiment_regex(self, sentiment_phrases):
         if not sentiment_phrases:
@@ -55,5 +58,4 @@ class SentimentAnalyzer:
             never_match_pattern = "a^"
             return never_match_pattern 
         return "(" + "|".join(multipliers) + ")"
-
 

@@ -5,7 +5,7 @@ class SentimentScorer:
     """ Calculates a sentiment score for sentiment phrases and their associated multipliers"""
 
     def __init__(self):
-        """Initializes SentimentAnalyzer."""
+        """Initializes SentimentScorer."""
         self._sentiment_weights = {}
         self._multiplier_weights = {}
 
@@ -21,5 +21,4 @@ class SentimentScorer:
         phrase_weight = (self._sentiment_weights.get(phrase, 0))
         mult_weights = ([self._multiplier_weights.get(m, 1) for m in multipliers])
         block_score = functools.reduce(operator.mul, mult_weights + [phrase_weight], 1)
-        print (block, block_score)
         return block_score
