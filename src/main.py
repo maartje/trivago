@@ -15,7 +15,7 @@ from sentiment_analyser import SentimentAnalyzer
 from sentiment_scorer import SentimentScorer
 from language_service import LanguageService
 from topic_locator import TopicLocator
-
+from application import Application
 
 def main(path_to_reviews, topic=None, path_to_semantics = "semantics/semantics.json"):  
     data_loader = DataLoader()
@@ -28,8 +28,12 @@ def main(path_to_reviews, topic=None, path_to_semantics = "semantics/semantics.j
     language_service = LanguageService()
     word_table = processor._word_table #TODO: public
     topic_locator = TopicLocator(language_service, word_table)
-    indices = topic_locator.get_topic_indices("room")
-    print indices[0:3]
+    # indices = topic_locator.get_topic_indices("room")
+    # print indices[0:3]
+    review_sentences = processor._review_sentences #TODO public
+    application = Application(topic_locator, review_sentences)
+    result = application.analyze_sentiment("room")
+    print (result)
 
     # ds = df_reviews['Content'].apply(lambda t: score_sentiment(t, weights, topic_words))
     # ds.sort_values(inplace=True)
