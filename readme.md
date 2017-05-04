@@ -68,7 +68,7 @@ Design
 Implemtation
 ============
 
-The application is implemented in python.
+The application is implemented in python 3.
 
 
 Future Work
