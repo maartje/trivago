@@ -9,8 +9,8 @@ class Processor:
         self._sentiment_analyser = sentiment_analyser
         self._semantic_weights = {}
         self._intensifier_weights = {}
-        self._word_table = {} 
-        self._review_sentences = None
+        self.word_table = {} 
+        self.review_sentences = None
     
     def _process_review_file(self, review_file):
             review_data = self._data_loader.load_json(review_file)
@@ -30,13 +30,13 @@ class Processor:
         print (len(self._intensifier_weights), "intensifiers detected")
 
         review_sentence_frames = [self._process_review_file(review_file) for review_file in review_files]
-        self._review_sentences = pd.concat(review_sentence_frames)
+        self.review_sentences = pd.concat(review_sentence_frames)
 
-        print (len(self._review_sentences), "review sentences analysed in total")
+        print (len(self.review_sentences), "review sentences analysed in total")
         
 
         self._score_review_sentences()
-        self._word_table = self._build_word_table()
+        self.word_table = self._build_word_table()
 
     def _get_semantic_weights(self, semantics_data):
         df_positive = json_normalize(semantics_data['positive'])
@@ -68,7 +68,7 @@ class Processor:
         return df_reviews_sentences
 
     def _score_review_sentences(self):
-        self._review_sentences["Score"] = self._review_sentences["Sentence"].apply(
+        self.review_sentences["Score"] = self.review_sentences["Sentence"].apply(
             lambda s: self._sentiment_analyser.score_sentiment(s)
         )
     
@@ -77,7 +77,7 @@ class Processor:
         regex = re.compile(word_pattern)
         
         word_table = {}
-        for index, sentence in self._review_sentences["Sentence"].iteritems():
+        for index, sentence in self.review_sentences["Sentence"].iteritems():
             words = regex.split(sentence.strip().lower())
             for w in words:
                 indices_for_word = word_table.get(w, set())

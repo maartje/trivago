@@ -26,8 +26,8 @@ def main(reviews_dir, topic=None, semantic_file = "semantics/semantics.json"):
     processor = Processor(data_loader, sentiment_analyser)
     processor.process(review_paths, semantic_file)
     
-    word_table = processor._word_table #TODO: public
-    review_sentences = processor._review_sentences #TODO public
+    word_table = processor.word_table 
+    review_sentences = processor.review_sentences 
     language_service = LanguageService()
     topic_locator = TopicLocator(language_service, word_table)
     application = Application(topic_locator, review_sentences)
