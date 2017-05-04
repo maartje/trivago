@@ -9,12 +9,14 @@ class TopicLocator:
         result = set()
         for t in topic_words:
             topic_indices = self._word_table.get(t, [])
-            result.union(topic_indices)
-        return list(topic_indices)
+            result = result.union(topic_indices)
+        return list(result)
             
 
     def _get_topic_words(self, word):
         result = [word.lower()]
         result.extend(self._language_service.get_synonyms(word.lower()))
         result.extend([self._language_service.get_singular_or_plural(w) for w in result])
-        return [w for w in result if w]
+        result = [w for w in result if w]
+        print (len(result), "additional topic words found (synonyms, plural/singular form):", result)
+        return result
