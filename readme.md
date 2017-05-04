@@ -71,3 +71,22 @@ Implemtation
 The application is implemented in python.
 
 
+Future Work
+============
+
+* Evaluate sentiment analyzer by comparing score 
+for topic 'rooms' with rating for rooms (and other rated topics)
+* Training sentiment phrase values by using rated topics (as mentioned above)  
+* Experiment with other scoring heuristics
+
+
+* Show top 3 most positive and most negative sentences for each hotel
+* More statistics
+
+
+* Use dictionairy API for synonys and plural/singular forms
+* Use translation API for reviews in other languages  
+
+* Inplace update in-memory data structure when new reviews become available
+
+
