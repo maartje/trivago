@@ -44,7 +44,7 @@ if __name__ == "__main__":
     else:
         raise ValueError('Wrong number of arguments. Arguments are: path to reviews directory (optional) and path to semantics file (optional)')
     while True:
-        topic = input('Enter your topic word:')
+        topic = input("Enter your topic word: ")
         topic_statistics = application.analyze_sentiment(topic)
         hotel_scores = topic_statistics.mean_score_per_hotel()
         print(hotel_scores)

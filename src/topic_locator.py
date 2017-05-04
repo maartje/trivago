@@ -18,5 +18,5 @@ class TopicLocator:
         result.extend(self._language_service.get_synonyms(word.lower()))
         result.extend([self._language_service.get_singular_or_plural(w) for w in result])
         result = [w for w in result if w]
-        print (len(result), "additional topic words found (synonyms, plural/singular form):", result)
+        print (len(result) - 1, "additional topic words found:", result[1:])
         return result
