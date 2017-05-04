@@ -16,23 +16,29 @@ from sentiment_scorer import SentimentScorer
 from language_service import LanguageService
 from topic_locator import TopicLocator
 from application import Application
+import os
 
-def main(path_to_reviews, topic=None, semantic_file = "semantics/semantics.json"):  
+def main(reviews_dir, topic=None, semantic_file = "semantics/semantics.json"):  
+    review_paths = get_filepaths_in_dir(reviews_dir)
     data_loader = DataLoader()
     sentiment_scorer = SentimentScorer()
     sentiment_analyser = SentimentAnalyzer(sentiment_scorer)
-
-    review_files = path_to_reviews #TODO dir
     processor = Processor(data_loader, sentiment_analyser)
-    processor.process(review_files, semantic_file)
+    processor.process(review_paths, semantic_file)
     
-    language_service = LanguageService()
     word_table = processor._word_table #TODO: public
-    topic_locator = TopicLocator(language_service, word_table)
     review_sentences = processor._review_sentences #TODO public
+    language_service = LanguageService()
+    topic_locator = TopicLocator(language_service, word_table)
     application = Application(topic_locator, review_sentences)
     return application
 
+def get_filepaths_in_dir(dir):
+    files = os.listdir(dir)
+    file_paths = [os.path.join(dir, file) for file in files]
+    file_paths.sort()
+    return file_paths
+    
 
 if __name__ == "__main__":
     if len(sys.argv) == 3:
@@ -40,7 +46,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 2:
         application = main(sys.argv[1])
     if len(sys.argv) == 1:
-        application = main(["data/reviews2.json", "data/reviews1.json"])
+        application = main("data")
     else:
         raise ValueError('Wrong number of arguments. Arguments are: path to reviews directory (optional) and path to semantics file (optional)')
     while True:
