@@ -29,16 +29,10 @@ def main(path_to_reviews, topic=None, semantic_file = "semantics/semantics.json"
     language_service = LanguageService()
     word_table = processor._word_table #TODO: public
     topic_locator = TopicLocator(language_service, word_table)
-    # indices = topic_locator.get_topic_indices("room")
-    # print indices[0:3]
     review_sentences = processor._review_sentences #TODO public
     application = Application(topic_locator, review_sentences)
     return application
 
-    # ds = df_reviews['Content'].apply(lambda t: score_sentiment(t, weights, topic_words))
-    # ds.sort_values(inplace=True)
-    # print(ds.values[0], ds.values[-1]) 
-    
 
 if __name__ == "__main__":
     if len(sys.argv) == 3:

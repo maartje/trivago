@@ -7,13 +7,9 @@ class Processor:
     def __init__(self, data_loader, sentiment_analyser):
         self._data_loader = data_loader
         self._sentiment_analyser = sentiment_analyser
-
         self._semantic_weights = {}
         self._intensifier_weights = {}
-        self._word_table = {} # Todo {'room' : [(R3456, 6)], ...}
-
-        # self._hotel = None # TODO: data frame with hotels?
-        # self._reviews = None
+        self._word_table = {} 
         self._review_sentences = None
     
     def _process_review_file(self, review_file):
@@ -21,32 +17,27 @@ class Processor:
             hotel = self._get_hotel(review_data)
             reviews = self._get_reviews(review_data, hotel)
             review_sentences = self._get_review_sentences(reviews)
+            print (len(reviews), "reviews processed for:", review_file)
             return review_sentences
         
 
     def process(self, review_files, semantic_file):
-        print(review_files)
         semantics_data = self._data_loader.load_json(semantic_file)
         self._semantic_weights = self._get_semantic_weights(semantics_data)
         self._intensifier_weights = self._get_intensifier_weights(semantics_data)
         self._sentiment_analyser.initialize(self._semantic_weights, self._intensifier_weights)
+        print (len(self._semantic_weights), "phrases detected")
+        print (len(self._intensifier_weights), "intensifiers detected")
 
         review_sentence_frames = [self._process_review_file(review_file) for review_file in review_files]
-        print (len(review_sentence_frames))
         self._review_sentences = pd.concat(review_sentence_frames)
+
+        print (len(self._review_sentences), "review sentences analysed in total")
         
 
         self._score_review_sentences()
         self._word_table = self._build_word_table()
 
-        # print (self._semantic_weights.get('great'))
-        # print (self._intensifier_weights.get('not'))
-        # print (self._hotel)
-        # print(self._reviews.loc[["UR139956543"]]["Content"][0])
-        # print(self._review_sentences.loc[[("UR34867745", 21)]]['Sentence'][0])
-        # print(self._review_sentences["Score"].sort_values())
-        # print (self._word_table.get("room", []))
-    
     def _get_semantic_weights(self, semantics_data):
         df_positive = json_normalize(semantics_data['positive'])
         df_negative = json_normalize(semantics_data['negative'])
@@ -92,4 +83,5 @@ class Processor:
                 indices_for_word = word_table.get(w, set())
                 indices_for_word.add(index)
                 word_table[w] = indices_for_word
+        print (len(word_table.keys()), "words stored in lookup table")
         return word_table

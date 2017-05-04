@@ -9,6 +9,7 @@ class Application:
     def analyze_sentiment(self, topic):
         topic_indices = self._topic_locator.get_topic_indices(topic)
         topic_sentences = self._review_sentences.loc[topic_indices]
+        print (len(topic_sentences), "sentences found for topic")
         return TopicStatistics(topic_sentences)
         # scores = topic_sentences['Score']
         # number_of_sentences = len(scores)
