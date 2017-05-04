@@ -19,7 +19,7 @@ class TestSentimentAnalyser(unittest.TestCase):
             "really" : 1.5
         }
         self._sentiment_scorer = SentimentScorer()
-        self._sentiment_scorer.score_sentiment = MagicMock(return_value = -30)
+        self._sentiment_scorer.score_sentiment = MagicMock()
         self._sentiment_analyser = SentimentAnalyzer(self._sentiment_scorer)
         self._sentiment_analyser.initialize(sentiment_weights, multiplier_weights)
 
