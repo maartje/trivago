@@ -11,10 +11,16 @@ Usage:
 import sys
 from processor import Processor
 from data_loader import DataLoader
+from sentiment_analyser import SentimentAnalyzer
+from sentiment_scorer import SentimentScorer
+
 
 def main(path_to_reviews, topic=None, path_to_semantics = "semantics/semantics.json"):  
     data_loader = DataLoader()
-    processor = Processor(data_loader)
+    sentiment_scorer = SentimentScorer()
+    sentiment_analyser = SentimentAnalyzer(sentiment_scorer)
+
+    processor = Processor(data_loader, sentiment_analyser)
     processor.process(path_to_reviews, path_to_semantics)
 
     # ds = df_reviews['Content'].apply(lambda t: score_sentiment(t, weights, topic_words))
