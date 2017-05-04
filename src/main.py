@@ -40,14 +40,14 @@ def get_filepaths_in_dir(dir):
     
 
 if __name__ == "__main__":
+    if len(sys.argv) > 3:
+        raise ValueError('Wrong number of arguments. Arguments are: path to reviews directory (optional) and path to semantics file (optional)')
     if len(sys.argv) == 3:
         application = main(sys.argv[1], sys.argv[2])
     if len(sys.argv) == 2:
         application = main(sys.argv[1])
     if len(sys.argv) == 1:
         application = main("data")
-    else:
-        raise ValueError('Wrong number of arguments. Arguments are: path to reviews directory (optional) and path to semantics file (optional)')
     while True:
         topic = input("Enter your topic word: ")
         topic_statistics = application.analyze_sentiment(topic)
