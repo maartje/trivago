@@ -1,11 +1,10 @@
 """ Main
 
 Usage:
-  main.py <path> <path>
+  python src/main.py <dir-path> <file-path>
   
-  First argument is the path to the directory (or file) containing the hotel reviews in json format.
-  Second argument (optional) is the topic.
-  Third argument (optional) is the path to the file containing the semantics in json format.
+  First argument is the path to the directory containing the hotel reviews in json format.
+  Second argument (optional) is the path to the file containing the semantics in json format.
 """
 
 import sys
