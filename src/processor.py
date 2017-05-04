@@ -10,21 +10,31 @@ class Processor:
 
         self._semantic_weights = {}
         self._intensifier_weights = {}
-        self._hotel = None # TODO: data frame with hotels?
-        self._reviews = None
-        self._review_sentences = None
         self._word_table = {} # Todo {'room' : [(R3456, 6)], ...}
 
-    def process(self, path_to_reviews, path_to_semantics):
-        review_data = self._data_loader.load_json(path_to_reviews)
-        self._hotel = self._get_hotel(review_data)
-        self._reviews = self._get_reviews(review_data)
-        self._review_sentences = self._get_review_sentences()
+        # self._hotel = None # TODO: data frame with hotels?
+        # self._reviews = None
+        self._review_sentences = None
+    
+    def _process_review_file(self, review_file):
+            review_data = self._data_loader.load_json(review_file)
+            hotel = self._get_hotel(review_data)
+            reviews = self._get_reviews(review_data, hotel)
+            review_sentences = self._get_review_sentences(reviews)
+            return review_sentences
         
-        semantics_data = self._data_loader.load_json(path_to_semantics)
+
+    def process(self, review_files, semantic_file):
+        print(review_files)
+        semantics_data = self._data_loader.load_json(semantic_file)
         self._semantic_weights = self._get_semantic_weights(semantics_data)
         self._intensifier_weights = self._get_intensifier_weights(semantics_data)
         self._sentiment_analyser.initialize(self._semantic_weights, self._intensifier_weights)
+
+        review_sentence_frames = [self._process_review_file(review_file) for review_file in review_files]
+        print (len(review_sentence_frames))
+        self._review_sentences = pd.concat(review_sentence_frames)
+        
 
         self._score_review_sentences()
         self._word_table = self._build_word_table()
@@ -54,14 +64,15 @@ class Processor:
         hotel = review_data['HotelInfo']
         return hotel
 
-    def _get_reviews(self, review_data):
+    def _get_reviews(self, review_data, hotel):
         df_reviews = json_normalize(review_data['Reviews'])
-        df_reviews.set_index(["ReviewID"], inplace=True)
+        df_reviews["HotelID"] = hotel.get("HotelID", "Unknown")
+        df_reviews.set_index(["HotelID", "ReviewID"], inplace=True)
         return df_reviews
     
-    def _get_review_sentences(self):
-        df_reviews_sentences = self._reviews["Content"].apply(lambda c: c.split(".")).apply(pd.Series).stack().to_frame()
-        df_reviews_sentences.index.rename(["ReviewID", "SentenceNumber"], inplace=True)
+    def _get_review_sentences(self, reviews):
+        df_reviews_sentences = reviews["Content"].apply(lambda c: c.split(".")).apply(pd.Series).stack().to_frame()
+        df_reviews_sentences.index.rename(["HotelID", "ReviewID", "SentenceNumber"], inplace=True)
         df_reviews_sentences.columns = ["Sentence"]
         return df_reviews_sentences
 
