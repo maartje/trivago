@@ -1,3 +1,4 @@
+import re
 import pandas as pd
 from pandas.io.json import json_normalize
 
@@ -12,7 +13,7 @@ class Processor:
         self._hotel = None # TODO: data frame with hotels?
         self._reviews = None
         self._review_sentences = None
-        self._words = {} # Todo {'room' : [(R3456, 6)], ...}
+        self._word_table = {} # Todo {'room' : [(R3456, 6)], ...}
 
     def process(self, path_to_reviews, path_to_semantics):
         review_data = self._data_loader.load_json(path_to_reviews)
@@ -26,14 +27,15 @@ class Processor:
         self._sentiment_analyser.initialize(self._semantic_weights, self._intensifier_weights)
 
         self._score_review_sentences()
-        
+        self._word_table = self._build_word_table()
 
         # print (self._semantic_weights.get('great'))
         # print (self._intensifier_weights.get('not'))
         # print (self._hotel)
         # print(self._reviews.loc[["UR139956543"]]["Content"][0])
-        print(self._review_sentences.loc[[("UR34867745", 21)]]['Sentence'][0])
+        # print(self._review_sentences.loc[[("UR34867745", 21)]]['Sentence'][0])
         # print(self._review_sentences["Score"].sort_values())
+        # print (self._word_table.get("room", []))
     
     def _get_semantic_weights(self, semantics_data):
         df_positive = json_normalize(semantics_data['positive'])
@@ -67,8 +69,16 @@ class Processor:
         self._review_sentences["Score"] = self._review_sentences["Sentence"].apply(
             lambda s: self._sentiment_analyser.score_sentiment(s)
         )
+    
+    def _build_word_table(self):
+        word_pattern = r"[\W]+"
+        regex = re.compile(word_pattern)
         
-        
-        
-        
-        
+        word_table = {}
+        for index, sentence in self._review_sentences["Sentence"].iteritems():
+            words = regex.split(sentence.strip().lower())
+            for w in words:
+                indices_for_word = word_table.get(w, set())
+                indices_for_word.add(index)
+                word_table[w] = indices_for_word
+        return word_table
