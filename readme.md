@@ -7,8 +7,9 @@ The comparison uses sentiment analysis on review sentences that mention that top
 
 Setup
 =====
-
-This setup requires the [conda](https://conda.io/docs/install/quick.html) package manager to be installed.
+This application is implemented in Python 3. 
+The easiest setup is by using the [conda](https://conda.io/docs/install/quick.html) 
+package manager.
 
 ```
 $ conda env create -f environment.yml
