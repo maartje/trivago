@@ -11,6 +11,7 @@ class Processor:
         self._intensifier_weights = {}
         self.word_table = {} 
         self.review_sentences = None
+        self._split_regex = re.compile("[\.\!\?\,\;]")
     
     def _process_review_file(self, review_file):
             review_data = self._data_loader.load_json(review_file)
@@ -62,7 +63,9 @@ class Processor:
         return df_reviews
     
     def _get_review_sentences(self, reviews):
-        df_reviews_sentences = reviews["Content"].apply(lambda c: c.split(".")).apply(pd.Series).stack().to_frame()
+        df_reviews_sentences = reviews["Content"].apply(
+            lambda c: [s.strip() for s in self._split_regex.split(c)]
+        ).apply(pd.Series).stack().to_frame()
         df_reviews_sentences.index.rename(["HotelID", "ReviewID", "SentenceNumber"], inplace=True)
         df_reviews_sentences.columns = ["Sentence"]
         return df_reviews_sentences
