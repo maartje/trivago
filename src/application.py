@@ -10,7 +10,7 @@ class Application:
         if not topic.strip():
             print (len(self._review_sentences), "sentences found")
             return TopicStatistics(self._review_sentences)
-        topic_indices = self._topic_locator.get_topic_indices(topic)
+        topic_indices = self._topic_locator.get_topic_indices(topic.strip())
         topic_sentences = self._review_sentences.loc[topic_indices]
         return TopicStatistics(topic_sentences)
         # scores = topic_sentences['Score']

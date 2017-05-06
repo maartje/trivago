@@ -18,7 +18,7 @@ from application import Application
 import os
 import re
 
-def main(reviews_dir, topic=None, semantic_file = "semantics/semantics.json"):  
+def main(reviews_dir, semantic_file = "semantics/semantics.json"):  
     review_paths = get_filepaths_in_dir(reviews_dir)
     data_loader = DataLoader()
     sentiment_scorer = SentimentScorer()
@@ -51,7 +51,7 @@ if __name__ == "__main__":
         application = main("data")
     while True:
         print ()
-        topic = input("Enter your topic word:")
+        topic = input("Enter your topic word: ").strip()
         if not re.match("^[a-zA-Z]*$", topic):
             print ("Error: Enter a single topic word or leave empty")
             continue
