@@ -53,3 +53,13 @@ if __name__ == "__main__":
         topic_statistics = application.analyze_sentiment(topic)
         hotel_scores = topic_statistics.mean_score_per_hotel()
         print(hotel_scores)
+        
+        print("most positive fragment: ")
+        most_positive = topic_statistics.most_positive_sentences(1)
+        print (most_positive["Sentence"][0], "(", most_positive["Score"][0] ,")")
+
+        print("most negative fragment: ")
+        most_negative = topic_statistics.most_negative_sentences(1)
+        print (most_negative["Sentence"][0], "(", most_negative["Score"][0] ,")")
+
+        
