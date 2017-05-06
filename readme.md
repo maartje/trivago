@@ -27,15 +27,21 @@ The Trivago app is a command-line application. See usage example below.
 **Loading review files and semantic data:**
 
 ```
- $ python src/main.py <reviews-dir> <semantics-file>
+$ python src/main.py <reviews-dir> <semantics-file>
 
 59 phrases detected
 13 intensifiers detected
-364 reviews processed for: data/reviews2.json
 188 reviews processed for: data/reviews1.json
-6748 review sentences analysed in total
-5996 words stored in lookup table
+364 reviews processed for: data/reviews2.json
+13 reviews processed for: data/reviews3.json
+142 reviews processed for: data/reviews4.json
+369 reviews processed for: data/reviews5.json
+21588 review sentence fragments analysed in total
+9058 words stored in lookup table
+
+Enter your topic word:
 ```
+
 The semantic file argument is optional, 
 by default the semantic file in 'semantics/semantics.json' is loaded.
 When no reviews directory is provided, 
@@ -46,11 +52,23 @@ the review files in 'data/' are loaded.
 
 ```
 Enter your topic word: room
-2 additional topic words found: ['room', 'rooms']
-954 sentences found for topic words
-  HotelID     Score
-0   77923  0.683219
-1   84333  0.662387
+1 additional topic words found: ['rooms']
+1937 sentences found containing the words 'room' or 'rooms'
+
+   HotelID     Score  #Fragments
+0  2514817  0.315292         582
+1    76790  0.375000          24
+2    77923  0.414791         311
+3    81363  0.173826         298
+4    84333  0.318560         722
+
+Most positive fragment:
+The room we were allocated was absolutely fantastic and today we cannot believe how fortunate we were ( 5.0 )
+
+Most negative fragment:
+The room decor is old and tired and not very clean ( -3.0 )
+
+Enter your topic word:
 ```
 
 Tests
