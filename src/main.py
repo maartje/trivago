@@ -49,18 +49,17 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         application = main("data")
     while True:
-        topic = input("Enter your topic word: ")
+        print ()
+        topic = input("Enter your topic word:")
         topic_statistics = application.analyze_sentiment(topic)
-        # hotel_scores = topic_statistics.mean_score_per_hotel()
-        # print(hotel_scores)
-        
+        print()
         print(topic_statistics.compare_hotels())
-        
-        print("most positive fragment: ")
+        print()
+        print("Most positive fragment:")
         most_positive = topic_statistics.most_positive_sentences(1)
         print (most_positive["Sentence"][0], "(", most_positive["Score"][0] ,")")
-
-        print("most negative fragment: ")
+        print()
+        print("Most negative fragment:")
         most_negative = topic_statistics.most_negative_sentences(1)
         print (most_negative["Sentence"][0], "(", most_negative["Score"][0] ,")")
 
