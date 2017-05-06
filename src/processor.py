@@ -11,7 +11,7 @@ class Processor:
         self._intensifier_weights = {}
         self.word_table = {} 
         self.review_sentences = None
-        self._split_regex = re.compile("[\.\!\?\,\;]")
+        self._split_regex = re.compile("[\.\!\?\,\;]| - ")
     
     def _process_review_file(self, review_file):
             review_data = self._data_loader.load_json(review_file)
@@ -33,7 +33,7 @@ class Processor:
         review_sentence_frames = [self._process_review_file(review_file) for review_file in review_files]
         self.review_sentences = pd.concat(review_sentence_frames)
 
-        print (len(self.review_sentences), "review sentences analysed in total")
+        print (len(self.review_sentences), "review sentence fragments analysed in total")
         
 
         self._score_review_sentences()
