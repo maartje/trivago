@@ -7,9 +7,11 @@ class Application:
         self._review_sentences = review_sentences
         
     def analyze_sentiment(self, topic):
+        if not topic.strip():
+            print (len(self._review_sentences), "sentences found")
+            return TopicStatistics(self._review_sentences)
         topic_indices = self._topic_locator.get_topic_indices(topic)
         topic_sentences = self._review_sentences.loc[topic_indices]
-        print (len(topic_sentences), "sentences found for topic words")
         return TopicStatistics(topic_sentences)
         # scores = topic_sentences['Score']
         # number_of_sentences = len(scores)
