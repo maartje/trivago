@@ -38,8 +38,6 @@ $ python src/main.py <reviews-dir> <semantics-file>
 369 reviews processed for: data/reviews5.json
 21588 review sentence fragments analysed in total
 9058 words stored in lookup table
-
-Enter your topic word:
 ```
 
 The semantic file argument is optional, 
@@ -52,6 +50,7 @@ the review files in 'data/' are loaded.
 
 ```
 Enter your topic word: room
+
 1 additional topic words found: ['rooms']
 1937 sentences found containing the words 'room' or 'rooms'
 
@@ -67,9 +66,10 @@ The room we were allocated was absolutely fantastic and today we cannot believe 
 
 Most negative fragment:
 The room decor is old and tired and not very clean ( -3.0 )
-
-Enter your topic word:
 ```
+
+Topics should be single words. If no topic word is entered, then the scores for all sentences are use
+to compare the hotels.
 
 Tests
 ========
@@ -94,7 +94,7 @@ Future Work
 ============
 
 * Evaluate sentiment analyzer by comparing score 
-for topic 'rooms' with rating for rooms (and other rated topics)
+for topic 'rooms' with ratings for rooms (and other rated topics)
 * Training sentiment phrase values by using rated topics (as mentioned above)  
 * Experiment with other scoring heuristics
 
