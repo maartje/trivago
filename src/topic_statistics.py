@@ -9,7 +9,7 @@ class TopicStatistics:
         result = self._group_by_hotel.agg(['mean', 'count'])
         result.columns = ["Score", "#Fragments"]
         result.reset_index(inplace=True)
-        result.sort_values("Score", ascending=False)
+        result.sort_values("Score", ascending=False, inplace=True)
         return result
         
     def most_positive_sentences(self, top=3):
