@@ -16,6 +16,7 @@ from language_service import LanguageService
 from topic_locator import TopicLocator
 from application import Application
 import os
+import re
 
 def main(reviews_dir, topic=None, semantic_file = "semantics/semantics.json"):  
     review_paths = get_filepaths_in_dir(reviews_dir)
@@ -51,16 +52,21 @@ if __name__ == "__main__":
     while True:
         print ()
         topic = input("Enter your topic word:")
+        if not re.match("^[a-zA-Z]*$", topic):
+            print ("Error: Enter a single topic word or leave empty")
+            continue
         topic_statistics = application.analyze_sentiment(topic)
         print()
         print(topic_statistics.compare_hotels())
         print()
-        print("Most positive fragment:")
+
         most_positive = topic_statistics.most_positive_sentences(1)
-        print (most_positive["Sentence"][0], "(", most_positive["Score"][0] ,")")
-        print()
-        print("Most negative fragment:")
-        most_negative = topic_statistics.most_negative_sentences(1)
-        print (most_negative["Sentence"][0], "(", most_negative["Score"][0] ,")")
+        if len(most_positive) > 0:
+            print("Most positive fragment:")
+            print (most_positive["Sentence"][0], "(", most_positive["Score"][0] ,")")
+            print()
+            most_negative = topic_statistics.most_negative_sentences(1)
+            print("Most negative fragment:")
+            print (most_negative["Sentence"][0], "(", most_negative["Score"][0] ,")")
 
         

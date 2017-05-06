@@ -10,6 +10,7 @@ class TopicLocator:
         for t in topic_words:
             topic_indices = self._word_table.get(t, [])
             result = result.union(topic_indices)
+        print (len(result), "sentences found containing the words", " or ".join("'" + w + "'" for w in topic_words))
         return list(result)
             
 
