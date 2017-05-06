@@ -3,12 +3,14 @@ class TopicStatistics:
     def __init__(self, sentences):
         self._sentences = sentences
         self._sentences.sort_values("Score", inplace=True, ascending=False)
-
-    def mean_score_per_hotel(self):
-        scores_per_hotel = self._sentences.groupby(level="HotelID")[["Score"]].mean().sort_values("Score", ascending=False)
-        scores_per_hotel.columns = ["Score"]
-        scores_per_hotel.reset_index(inplace=True)
-        return scores_per_hotel
+        self._group_by_hotel = self._sentences.groupby(level="HotelID")
+    
+    def compare_hotels(self):
+        result = self._group_by_hotel.agg(['mean', 'count'])
+        result.columns = ["Score", "#Fragments"]
+        result.reset_index(inplace=True)
+        result.sort_values("Score", ascending=False)
+        return result
         
     def most_positive_sentences(self, top=3):
         return self._sentences.head(top)

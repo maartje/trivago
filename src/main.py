@@ -51,8 +51,10 @@ if __name__ == "__main__":
     while True:
         topic = input("Enter your topic word: ")
         topic_statistics = application.analyze_sentiment(topic)
-        hotel_scores = topic_statistics.mean_score_per_hotel()
-        print(hotel_scores)
+        # hotel_scores = topic_statistics.mean_score_per_hotel()
+        # print(hotel_scores)
+        
+        print(topic_statistics.compare_hotels())
         
         print("most positive fragment: ")
         most_positive = topic_statistics.most_positive_sentences(1)
